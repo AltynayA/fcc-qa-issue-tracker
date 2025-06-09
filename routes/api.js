@@ -3,7 +3,7 @@
 var expect = require('chai').expect
 const mongoose = require('mongoose')
 let mongodb = require('mongodb')
-let uri = 'mongodb+srv://goldmoon321123:' +process.env.PW + '@xxxxxx.xxxxx.mongodb.net/<DATABASE>?retryWrites=true&w=majority'
+let uri = 'mongodb+srv://goldmoon321123:' +process.env.PW + '@xxxxxx.xxxxx.mongodb.net/testing?retryWrites=true&w=majority'
 module.exports = function (app) {
   module.exports = function (app) {
     let uri = 'mongodb+srv://user1:' + process.env.PW + '@freecodecamp.b0myq.mongodb.net/issue_tracker?retryWrites=true&w=majority';
