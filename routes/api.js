@@ -71,21 +71,11 @@ module.exports = function (app) {
             if (!req.body._id) {
                 return res.json({error: 'missing _id'})
             }
-            let updateObject = {}
-            Object.keys(req.body).forEach((key) => {
-                if(req.body[key] != ''){
-                    updateObject[key] = req.body[key]
-                }
-            })
-            if(Object.keys(updateObject).length < 2) {
-                return res.json('no updated field sent')
-            }
-            // if (!req.body.issue_title && !req.body.issue_text && !req.body.created_by &&
-            //     !req.body.status_text && !req.body.assigned_to && req.body.open === undefined) {
-            //     return res.json({error: 'no update field(s) sent', '_id': req.body._id})
-            // }
             if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
                 return res.json({error: 'could not update', '_id': req.body._id});
+            }
+            if (!req.body.issue_title && !req.body.issue_text && !req.body.created_by && !req.body.status_text && !req.body.assigned_to && req.body.open === undefined) {
+                return res.json({error: 'no update field(s) sent', '_id': req.body._id})
             }
             try {
                 const initialIssue = await Issue.findById(req.body._id)
