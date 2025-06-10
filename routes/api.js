@@ -77,13 +77,13 @@ module.exports = function (app) {
                 return res.status(400).json({error: 'no update field(s) sent', '_id': req.body._id})
             }
             if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
-                return res.json({error: 'could not update', '_id': req.body._id });
+                return res.json({error: 'could not update', '_id': req.body._id});
             }
             try {
                 const initialIssue = await Issue.findById(req.body._id)
                 if (!initialIssue) {
                     // return res.status(404).json('issue not found')
-                    return res.json({error: 'could not update', '_id': req.body._id });
+                    return res.json({error: 'could not update', '_id': req.body._id});
                 }
                 let filter = {_id: req.body._id}
                 let update = {
@@ -100,7 +100,7 @@ module.exports = function (app) {
                     new: true
                 });
                 if (!changedIssue) {
-                    return res.json({error: 'could not update', '_id': req.body._id });
+                    return res.json({error: 'could not update', '_id': req.body._id});
                 }
                 res.json({result: 'successfully updated', '_id': req.body._id})
             } catch (error) {
@@ -109,23 +109,23 @@ module.exports = function (app) {
         })
 
         .delete(async function (req, res) {
+            let project = req.params.project;
+            if (!req.body._id) {
+                // 10 requirements remov status
+                return res.json({error: 'missing _id'})
+            }
+            if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
+                return res.json({error: 'could not delete', _id: req.body._id});
+            }
             try {
-                let project = req.params.project;
-                if (!req.body._id) {
-                    // 10 requirements remov status
-                    return res.json({error: 'missing _id'})
-                }
-                if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
-                    // return res.status(200).json({message: 'Invalid ID format'});
-                    // 10 requirements remov status
-                    return res.json({error: 'could not delete', _id: req.body._id});
-                }
                 let filter = {_id: req.body._id}
-
                 let deletedIssue = await Issue.findOneAndDelete(filter);
-                res.status(200).json({result: 'successfully deleted', '_id': req.body._id})
+                if (!deletedIssue) {
+                    return res.json({error: 'could not delete', _id: req.body._id})
+                }
+                return res.json({result: 'successfully deleted', '_id': req.body._id})
             } catch (error) {
-                res.status(500).json({error: 'could not delete', _id: req.body._id})
+                res.json({error: 'could not delete', _id: req.body._id})
             }
         });
 
