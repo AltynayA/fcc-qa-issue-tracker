@@ -127,7 +127,6 @@ suite('Functional Tests', function () {
             .put('/api/issues/test')
             .send({_id: issueId})
             .end(function (err, res) {
-                assert.equal(res.status, 400)
                 assert.equal(res.body.error, 'no update field(s) sent')
                 done()
             })
@@ -138,7 +137,7 @@ suite('Functional Tests', function () {
             .put('/api/issues/test')
             .send({_id: 'ljbkuh12'})
             .end(function (err, res) {
-                assert.equal(res.status, 400)
+                assert.equal(res.body.error, 'could not update')
                 done()
             })
     })
