@@ -170,7 +170,7 @@ suite('Functional Tests', function () {
             .delete('/api/issues/test')
             .send({})
             .end(function (err, res) {
-                assert.equal(res.status, 400)
+                assert.equal(res.body.error, 'missing _id' )
                 done()
             })
     })
