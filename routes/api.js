@@ -47,7 +47,8 @@ module.exports = function (app) {
             // console.log("reached post");
             let project = req.params.project;
             if (!req.body.issue_title || !req.body.issue_text || !req.body.created_by) {
-                return res.status(400).json({error: 'required field(s) missing'})
+                // return res.status(400).json({error: 'required field(s) missing'})
+                return res.json({error: 'required field(s) missing'})
             }
             let newIssue = new Issue({
                 issue_title: req.body.issue_title,
