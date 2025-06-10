@@ -47,7 +47,7 @@ suite('Functional Tests', function () {
     test('When POST without required fields, return error', function (done) {
         chai.request(server).post('/api/issues/test').send({}).end(function (err, res) {
 
-            assert.equal(res.body, 'Required fields missing from request')
+            assert.equal(res.body.error ,'required field(s) missing')
             done()
         })
     })
@@ -96,7 +96,7 @@ suite('Functional Tests', function () {
             .send({created_by: 'Natasha Romanoff', _id: issueId})
             .end(function (err, res) {
                 assert.equal(res.body._id, issueId)
-                assert.equal(res.body.created_by, 'Natasha Romanoff')
+                assert.equal(res.body.result, 'successfully updated')
                 done()
             })
     })
@@ -107,8 +107,7 @@ suite('Functional Tests', function () {
             .send({created_by: 'Tony Stark', status_text: 'Iloveyou3000', _id: issueId})
             .end(function (err, res) {
                 assert.equal(res.body._id, issueId)
-                assert.equal(res.body.created_by, 'Tony Stark')
-                assert.equal(res.body.status_text, 'Iloveyou3000')
+                assert.equal(res.body.result, 'successfully updated')
                 done()
             })
     })
@@ -118,7 +117,7 @@ suite('Functional Tests', function () {
             .put('/api/issues/test')
             .send({created_by: 'Tony Stark', status_text: 'Iloveyou3000'})
             .end(function (err, res) {
-                assert.equal(res.body, 'Required fields missing from request')
+                assert.equal(res.body.error, 'missing _id')
                 done()
             })
     })
@@ -128,10 +127,11 @@ suite('Functional Tests', function () {
             .put('/api/issues/test')
             .send({_id: issueId})
             .end(function (err, res) {
-                assert.equal(res.body.status_text, 'Iloveyou3000')
+                assert.equal(res.status, 400)
+                assert.equal(res.body.error,  'no update field(s) sent')
                 done()
             })
-    })
+    })gi
 //     #11
     test('Update an issue with an invalid _id', function (done) {
         chai.request(server)
