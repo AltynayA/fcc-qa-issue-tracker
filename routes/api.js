@@ -73,7 +73,7 @@ module.exports = function (app) {
                 return res.json({error: 'missing _id'})
             }
             if (!req.body.issue_title && !req.body.issue_text && !req.body.created_by &&
-                !req.body.status_text && !req.body.assigned_to) {
+                !req.body.status_text && !req.body.assigned_to && req.body.open === undefined) {
                 return res.status(400).json({error: 'no update field(s) sent', '_id': req.body._id})
             }
             if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
