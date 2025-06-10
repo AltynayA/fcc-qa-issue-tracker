@@ -131,7 +131,7 @@ suite('Functional Tests', function () {
                 assert.equal(res.body.error,  'no update field(s) sent')
                 done()
             })
-    })gi
+    })
 //     #11
     test('Update an issue with an invalid _id', function (done) {
         chai.request(server)
