@@ -69,20 +69,27 @@ module.exports = function (app) {
         .put(async function (req, res) {
             let project = req.params.project;
             if (!req.body._id) {
-                // fixing 8 req
                 return res.json({error: 'missing _id'})
             }
-            if (!req.body.issue_title && !req.body.issue_text && !req.body.created_by &&
-                !req.body.status_text && !req.body.assigned_to && req.body.open === undefined) {
-                return res.status(400).json({error: 'no update field(s) sent', '_id': req.body._id})
+            let updateObject = {}
+            Object.keys(req.body).forEach((key) => {
+                if(req.body[key] != ''){
+                    updateObject[key] = req.body[key]
+                }
+            })
+            if(Object.keys(updateObject).length < 2) {
+                return res.json('no updated field sent')
             }
+            // if (!req.body.issue_title && !req.body.issue_text && !req.body.created_by &&
+            //     !req.body.status_text && !req.body.assigned_to && req.body.open === undefined) {
+            //     return res.json({error: 'no update field(s) sent', '_id': req.body._id})
+            // }
             if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
                 return res.json({error: 'could not update', '_id': req.body._id});
             }
             try {
                 const initialIssue = await Issue.findById(req.body._id)
                 if (!initialIssue) {
-                    // return res.status(404).json('issue not found')
                     return res.json({error: 'could not update', '_id': req.body._id});
                 }
                 let filter = {_id: req.body._id}
@@ -115,13 +122,13 @@ module.exports = function (app) {
                 return res.json({error: 'missing _id'})
             }
             if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
-                return res.json({error: 'could not delete', _id: req.body._id});
+                return res.json({error: 'could not delete', '_id': req.body._id});
             }
             try {
                 let filter = {_id: req.body._id}
                 let deletedIssue = await Issue.findOneAndDelete(filter);
                 if (!deletedIssue) {
-                    return res.json({error: 'could not delete', _id: req.body._id})
+                    return res.json({error: 'could not delete', '_id': req.body._id})
                 }
                 return res.json({result: 'successfully deleted', '_id': req.body._id})
             } catch (error) {
