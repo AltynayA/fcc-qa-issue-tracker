@@ -47,7 +47,7 @@ module.exports = function (app) {
             // console.log("reached post");
             let project = req.params.project;
             if (!req.body.issue_title || !req.body.issue_text || !req.body.created_by) {
-                return res.json('Required fields missing from request')
+                return res.status(400).json({error: 'required field(s) missing'})
             }
             let newIssue = new Issue({
                 issue_title: req.body.issue_title,
@@ -68,7 +68,7 @@ module.exports = function (app) {
         .put(async function (req, res) {
             let project = req.params.project;
             if (!req.body._id) {
-                return res.status(400).json('Required fields missing from request')
+                return res.status(400).json({error: 'missing _id'})
             }
             if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
                 return res.status(400).json({message: 'Invalid ID format'});
@@ -77,6 +77,10 @@ module.exports = function (app) {
                 const initialIssue = await Issue.findById(req.body._id)
                 if (!initialIssue) {
                     return res.status(404).json('issue not found')
+                }
+                if (!req.body.issue_title && !req.body.issue_text && !req.body.created_by &&
+                    !req.body.status_text && !req.body.assigned_to) {
+                    return res.status(400).json({error: 'no update field(s) sent', '_id': req.body._id})
                 }
                 let filter = {_id: req.body._id}
                 let update = {
@@ -95,9 +99,9 @@ module.exports = function (app) {
                 if (!changedIssue) {
                     return res.status(404).json('issue not found')
                 }
-                res.json(changedIssue)
+                res.json({result: 'successfully updated', '_id': req.body._id})
             } catch (error) {
-                res.status(404).json('not found')
+                res.status(404).json({ error: 'could not update', '_id': req.body._id })
             }
         })
 
@@ -105,7 +109,7 @@ module.exports = function (app) {
             try {
                 let project = req.params.project;
                 if (!req.body._id) {
-                    res.status(400).json('Missing issue ID')
+                    res.status(400).json({ error: 'missing _id' })
                     return
                 }
                 if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
@@ -114,9 +118,9 @@ module.exports = function (app) {
                 let filter = {_id: req.body._id}
 
                 let deletedIssue = await Issue.findOneAndDelete(filter);
-                res.status(202).json({result:'successfully deleted'})
+                res.status(202).json({result: 'successfully deleted' ,'_id': req.body._id })
             } catch (error) {
-                res.status(404).json({error:'could not delete', _id:req.body._id})
+                res.status(404).json({error: 'could not delete', _id: req.body._id})
             }
         });
 
