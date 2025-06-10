@@ -27,18 +27,16 @@ module.exports = function (app) {
         .get(async function (req, res) {
                 let project = req.params.project;
                 let filterObject = Object.assign(req.query)
-
                 filterObject['project'] = project
                 try {
-                    let issue = await Issue.find(filterObject)
-                    if (!issue) {
-                        res.status(404).json('Not found')
-                        return
-                    }
-                    res.json(issue)
+                    let issues = await Issue.find(filterObject)
+                    // if (!issue) {
+                    //     res.status(404).json('Not found')
+                    //     return
+                    // }
+                    res.json(issues)
                 } catch (error) {
-                    res.status(404).json('Not found')
-                    return
+                    return res.json({ error: 'could not fetch issues' });
                 }
             }
         )
@@ -108,7 +106,6 @@ module.exports = function (app) {
         .delete(async function (req, res) {
             let project = req.params.project;
             if (!req.body._id) {
-                // 10 requirements remov status
                 return res.json({error: 'missing _id'})
             }
             if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
@@ -122,7 +119,7 @@ module.exports = function (app) {
                 }
                 return res.json({result: 'successfully deleted', '_id': req.body._id})
             } catch (error) {
-                res.json({error: 'could not delete', _id: req.body._id})
+                res.json({error: 'could not delete', '_id': req.body._id})
             }
         });
 
