@@ -47,7 +47,7 @@ suite('Functional Tests', function () {
     test('When POST without required fields, return error', function (done) {
         chai.request(server).post('/api/issues/test').send({}).end(function (err, res) {
 
-            assert.equal(res.body.error ,'required field(s) missing')
+            assert.equal(res.body.error, 'required field(s) missing')
             done()
         })
     })
@@ -128,7 +128,7 @@ suite('Functional Tests', function () {
             .send({_id: issueId})
             .end(function (err, res) {
                 assert.equal(res.status, 400)
-                assert.equal(res.body.error,  'no update field(s) sent')
+                assert.equal(res.body.error, 'no update field(s) sent')
                 done()
             })
     })
@@ -170,7 +170,7 @@ suite('Functional Tests', function () {
             .delete('/api/issues/test')
             .send({})
             .end(function (err, res) {
-                assert.equal(res.body.error, 'missing _id' )
+                assert.equal(res.body.error, 'missing _id')
                 done()
             })
     })
