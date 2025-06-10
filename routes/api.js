@@ -101,7 +101,7 @@ module.exports = function (app) {
                 }
                 res.json({result: 'successfully updated', '_id': req.body._id})
             } catch (error) {
-                res.status(404).json({ error: 'could not update', '_id': req.body._id })
+                res.status(500).json({ error: 'could not update', '_id': req.body._id })
             }
         })
 
@@ -113,14 +113,15 @@ module.exports = function (app) {
                     return
                 }
                 if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
-                    return res.status(400).json({message: 'Invalid ID format'});
+                    // return res.status(200).json({message: 'Invalid ID format'});
+                    return res.status(400).json({ error: 'could not delete', _id: req.body._id });
                 }
                 let filter = {_id: req.body._id}
 
                 let deletedIssue = await Issue.findOneAndDelete(filter);
-                res.status(202).json({result: 'successfully deleted' ,'_id': req.body._id })
+                res.status(200).json({result: 'successfully deleted' ,'_id': req.body._id })
             } catch (error) {
-                res.status(404).json({error: 'could not delete', _id: req.body._id})
+                res.status(500).json({error: 'could not delete', _id: req.body._id})
             }
         });
 

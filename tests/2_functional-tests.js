@@ -148,7 +148,7 @@ suite('Functional Tests', function () {
             .delete('/api/issues/test')
             .send({_id: issueId})
             .end(function (err, res) {
-                assert.equal(res.status, 202)
+                assert.equal(res.status, 200)
                 done()
             })
 
@@ -159,7 +159,8 @@ suite('Functional Tests', function () {
             .delete('/api/issues/test')
             .send({_id: '123trehg5e'})
             .end(function (err, res) {
-                assert.equal(res.status, 400)
+                // assert.equal(res.status, 400)
+                assert.equal(res.body.error, 'could not delete')
                 done()
             })
     })
