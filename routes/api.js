@@ -110,12 +110,13 @@ module.exports = function (app) {
             try {
                 let project = req.params.project;
                 if (!req.body._id) {
-                    res.status(400).json({ error: 'missing _id' })
-                    return
+                    // 10 requirements remov status
+                    return res.json({ error: 'missing _id' })
                 }
                 if (!mongoose.Types.ObjectId.isValid(req.body._id)) {
                     // return res.status(200).json({message: 'Invalid ID format'});
-                    return res.status(400).json({ error: 'could not delete', _id: req.body._id });
+                    // 10 requirements remov status
+                    return res.json({ error: 'could not delete', _id: req.body._id });
                 }
                 let filter = {_id: req.body._id}
 
